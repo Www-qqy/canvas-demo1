@@ -7,7 +7,29 @@
       content="width=
     , initial-scale=1.0"
     />
+    <link rel="stylesheet" href="style.css" />
     <title>Document</title>
   </head>
-  <body></body>
+  <body>
+    <div id="canvas"></div>
+    <script>
+      canvas.onclick = e => {
+        console.log(e);
+        console.log(e.clientX);
+        console.log(e.clientY);
+        let div = document.createElement("div");
+        canvas.appendChild(div);
+        var ds = div.style;
+        div.style.position = "absolute";
+        div.style.top = e.clientY + "px";
+        div.style.left = e.clientX + "px";
+        div.style.width = 6 + "px";
+        div.style.height = 6 + "px";
+        div.style.marginLeft = "-3px";
+        div.style.marginTop = "-3px";
+        ds.borderRadius = "3px";
+        div.style.backgroundColor = "black";
+      };
+    </script>
+  </body>
 </html>
