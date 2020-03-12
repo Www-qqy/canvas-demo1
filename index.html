@@ -11,25 +11,75 @@
     <title>Document</title>
   </head>
   <body>
-    <div id="canvas"></div>
+    <canvas id="canvas" width="" height=""></canvas>
     <script>
-      canvas.onmousemove = e => {
-        console.log(e);
-        console.log(e.clientX);
-        console.log(e.clientY);
-        let div = document.createElement("div");
-        canvas.appendChild(div);
-        var ds = div.style;
-        div.style.position = "absolute";
-        div.style.top = e.clientY + "px";
-        div.style.left = e.clientX + "px";
-        div.style.width = 6 + "px";
-        div.style.height = 6 + "px";
-        div.style.marginLeft = "-3px";
-        div.style.marginTop = "-3px";
-        ds.borderRadius = "3px";
-        div.style.backgroundColor = "black";
-      };
+      let documentWidth = document.documentElement.clientWidth;
+      let documentHeight = document.documentElement.clientHeight;
+
+      let canvas = document.getElementById("canvas");
+      canvas.width = documentWidth;
+      canvas.height = documentHeight;
+      let last = [];
+
+      function drawLine(x1, y1, x2, y2) {
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+      }
+      if (canvas.width < 500) {
+        console.log("手机");
+      } else {
+        console.log("电脑");
+      }
+      var isTouchDevice = "ontouchstart" in document.documentElement;
+      console.log(isTouchDevice);
+      let ctx = canvas.getContext("2d");
+      let painting = false;
+      ctx.fillStyle = "black";
+      ctx.lineCap = "round";
+      ctx.lineWidth = 10;
+      ctx.strokeStyle = "black";
+      console.log(document.body.clientWidth);
+      if (isTouchDevice) {
+        canvas.ontouchstart = e => {
+          let x = e.touches[0].clientX;
+          let y = e.touches[0].clientY;
+          last = [x, y];
+        };
+        canvas.ontouchmove = e => {
+          console.log(e);
+          let x = e.touches[0].clientX;
+          let y = e.touches[0].clientY;
+          ctx.lineWidth = 3;
+          drawLine(last[0], last[1], x, y);
+          last = [x, y];
+
+          //   console.log(x, y);
+          //   ctx.beginPath();
+          //   ctx.arc(x, y, 10, 0, 2 * Math.PI);
+          //   ctx.stroke();
+          //   ctx.fill();
+        };
+      } else {
+        canvas.onmousedown = e => {
+          painting = true;
+          last = [e.clientX, e.clientY];
+        };
+        canvas.onmousemove = e => {
+          if (painting) {
+            // ctx.beginPath();
+            // ctx.arc(e.clientX - 5, e.clientY - 5, 5, 0, 2 * Math.PI);
+            // ctx.stroke();
+            // ctx.fill();
+            drawLine(last[0], last[1], e.clientX, e.clientY);
+            last = [e.clientX, e.clientY];
+          }
+        };
+        canvas.onmouseup = () => {
+          painting = false;
+        };
+      }
     </script>
   </body>
 </html>
